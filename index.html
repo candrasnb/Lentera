@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lentera Hidup</title>
+    <title>Lentera Hidup - Renungan Harian</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1978143041115024"
      crossorigin="anonymous"></script>
 
+    <meta property="og:title" content="Lentera Hidup - Renungan Harian">
+    <meta property="og:description" content="Saat teduh dan inspirasi Firman Tuhan setiap hari.">
+    <meta property="og:image" content="https://lenterahidup.site/logo.jpg">
+    <meta property="og:url" content="https://lenterahidup.site">
+    <meta property="og:type" content="website">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:italic,wght@700;900&display=swap');
         
@@ -23,15 +30,14 @@
         .art-card img { width: 100%; height: 320px; object-fit: cover; }
         .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(2,6,23,1) 0%, rgba(2,6,23,0.4) 50%, rgba(2,6,23,0) 100%); display: flex; flex-direction: column; justify-content: end; padding: 2rem; text-align: center; }
 
-        /* Custom Salib Latin Menyala */
-        .cross-container { position: relative; width: 60px; height: 100px; margin: 0 auto 3rem; display: flex; justify-content: center; }
-        .cross-vertical { position: absolute; width: 8px; height: 100%; background: #3b82f6; border-radius: 4px; box-shadow: 0 0 20px #3b82f6; }
-        .cross-horizontal { position: absolute; width: 50px; height: 8px; background: #3b82f6; top: 30%; border-radius: 4px; box-shadow: 0 0 20px #3b82f6; }
-        .cross-glow-sphere { position: absolute; width: 100px; height: 100px; background: radial-gradient(circle, rgba(59,130,246,0.4) 0%, rgba(59,130,246,0) 70%); top: 10%; filter: blur(15px); animation: pulseCross 3s infinite alternate; }
+        .cross-container { position: relative; width: 60px; height: 120px; margin: 0 auto 3rem; display: flex; justify-content: center; }
+        .cross-vertical { position: absolute; width: 8px; height: 100%; background: #3b82f6; border-radius: 4px; box-shadow: 0 0 25px #3b82f6; }
+        .cross-horizontal { position: absolute; width: 55px; height: 8px; background: #3b82f6; top: 25%; border-radius: 4px; box-shadow: 0 0 25px #3b82f6; }
+        .cross-glow-sphere { position: absolute; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(59,130,246,0) 70%); top: 5%; filter: blur(20px); animation: pulseCross 3s infinite alternate; }
         
         @keyframes pulseCross {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(1.4); opacity: 0.9; }
+            0% { transform: scale(0.9); opacity: 0.4; }
+            100% { transform: scale(1.3); opacity: 0.8; }
         }
 
         .tab-btn.active { background: #3b82f6 !important; color: white !important; }
@@ -62,21 +68,13 @@
     </header>
 
     <main id="renungan-section" class="px-6 py-24 max-w-lg mx-auto w-full">
-        <div class="flex items-center gap-4 mb-12">
-            <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-blue-600/30"></div>
-            <h2 class="text-sm font-black uppercase tracking-[0.4em] text-blue-500">List Renungan</h2>
-            <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-blue-600/30"></div>
-        </div>
         <div id="article-container" class="space-y-12"></div>
     </main>
 
     <footer class="mt-auto relative border-t border-white/5 bg-slate-950 pt-32 pb-20 px-10 text-center overflow-hidden">
         <div class="cross-container">
-            <div class="cross-glow-sphere"></div>
-            <div class="cross-vertical"></div>
-            <div class="cross-horizontal"></div>
+            <div class="cross-glow-sphere"></div><div class="cross-vertical"></div><div class="cross-horizontal"></div>
         </div>
-
         <div class="max-w-md mx-auto space-y-6 relative z-10">
             <h3 class="playfair text-xl text-white/80 italic leading-relaxed">"Sampai fajar menyingsing dan bintang timur terbit bersinar di dalam hatimu."</h3>
             <div class="w-12 h-[2px] bg-blue-600 mx-auto"></div>
@@ -84,26 +82,36 @@
         </div>
     </footer>
 
+    <div id="bible-modal" class="modal">
+        <div class="p-6 flex justify-end">
+            <button onclick="tutupModal('bible-modal')" class="w-12 h-12 glass rounded-full flex items-center justify-center"><i data-lucide="x"></i></button>
+        </div>
+        <div class="animate__animated animate__fadeInUp px-6 pb-10 w-full">
+            <h3 class="text-green-500 font-black uppercase text-[10px] tracking-[0.5em] mb-8 text-center">Alkitab Setahun</h3>
+            <div id="b-text" class="text-[15px] text-white/90 leading-relaxed text-justify space-y-4"></div>
+            
+            <button onclick="tutupModal('bible-modal')" class="mt-16 w-full py-5 glass rounded-3xl font-black text-[10px] uppercase tracking-widest text-gray-400 flex items-center justify-center gap-2">
+                <i data-lucide="chevron-down" size="14"></i> Selesai Membaca
+            </button>
+        </div>
+    </div>
+
     <div id="read-modal" class="modal">
         <div class="fixed top-0 w-full p-8 flex justify-between z-[100]"><button onclick="tutupModal('read-modal')" class="w-12 h-12 glass rounded-full flex items-center justify-center"><i data-lucide="chevron-left"></i></button><button id="btn-share-trigger" class="w-12 h-12 glass rounded-full flex items-center justify-center text-blue-400"><i data-lucide="share-2" size="20"></i></button></div>
         <img id="read-img" class="w-full h-[45vh] object-cover">
-        <div class="p-10 max-w-xl mx-auto -mt-12 relative bg-slate-950 rounded-t-[3rem] shadow-2xl">
+        <div class="p-6 w-full mx-auto -mt-12 relative bg-slate-950 rounded-t-[3rem] shadow-2xl">
             <div id="read-date" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 text-center"></div>
-            <h2 id="read-title" class="text-2xl font-black mb-8 leading-tight text-center"></h2>
-            <div id="read-desc" class="text-gray-300 leading-relaxed text-sm space-y-6 pb-20 text-justify"></div>
+            <h2 id="read-title" class="text-2xl font-black mb-8 leading-tight text-center px-4"></h2>
+            <div id="read-desc" class="text-gray-300 leading-relaxed text-[15px] space-y-6 pb-20 text-justify"></div>
+            
+            <button onclick="tutupModal('read-modal')" class="w-full py-5 glass rounded-3xl font-black text-[10px] uppercase tracking-widest text-gray-500 flex items-center justify-center gap-2 mb-10">
+                <i data-lucide="arrow-left" size="14"></i> Kembali ke Daftar
+            </button>
         </div>
     </div>
 
     <div id="quote-modal" class="modal items-center justify-center p-10 text-center">
         <div class="animate__animated animate__zoomIn"><i data-lucide="quote" class="text-blue-500/20 mb-8 mx-auto" size="64"></i><h2 id="q-text" class="text-xl playfair italic mb-8 px-4 text-center"></h2><p id="q-ref" class="text-blue-500 font-black uppercase text-xs tracking-[0.3em]"></p><button onclick="tutupModal('quote-modal')" class="mt-20 text-gray-500 text-[10px] font-bold uppercase tracking-[0.5em]">Tutup</button></div>
-    </div>
-
-    <div id="bible-modal" class="modal p-10 items-center justify-center text-center">
-        <div class="animate__animated animate__zoomIn w-full max-w-md mx-auto">
-            <h3 class="text-green-500 font-black uppercase text-[10px] tracking-[0.5em] mb-12">Alkitab Setahun</h3>
-            <div id="b-text" class="text-[13px] playfair italic text-white/90 leading-relaxed text-justify overflow-y-auto max-h-[55vh] px-4 space-y-4"></div>
-            <button onclick="tutupModal('bible-modal')" class="mt-16 w-14 h-14 glass rounded-full mx-auto flex items-center justify-center"><i data-lucide="x"></i></button>
-        </div>
     </div>
 
     <div id="admin-modal" class="modal p-8">
@@ -159,14 +167,7 @@
             home.innerHTML = "";
             store.renungan.forEach(item => {
                 const tgl = formatTgl(item.updatedAt);
-                home.innerHTML += `
-                    <div onclick="window.bukaBaca('${item.id}')" class="art-card group animate__animated animate__fadeIn">
-                        <img src="${item.image}">
-                        <div class="card-overlay">
-                            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-2">${tgl}</span>
-                            <h3 class="text-xl font-extrabold">${item.title}</h3>
-                        </div>
-                    </div>`;
+                home.innerHTML += `<div onclick="window.bukaBaca('${item.id}')" class="art-card group animate__animated animate__fadeIn"><img src="${item.image}"><div class="card-overlay"><span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-2">${tgl}</span><h3 class="text-xl font-extrabold">${item.title}</h3></div></div>`;
             });
 
             if(store.ayat.length > 0) {
@@ -174,7 +175,7 @@
                 document.getElementById('q-ref').innerText = store.ayat[0].title;
             }
             if(store.bacaan.length > 0) {
-                document.getElementById('b-text').innerHTML = store.bacaan[0].desc.split('\n').map(line => `<div class="mb-1">${line}</div>`).join('');
+                document.getElementById('b-text').innerHTML = store.bacaan[0].desc.split('\n').map(line => `<p>${line}</p>`).join('');
             }
 
             const list = document.getElementById('admin-list');
@@ -198,7 +199,7 @@
                     canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    fotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
                 };
                 img.src = e.target.result;
             };
@@ -209,7 +210,7 @@
             const btn = document.getElementById('btn-save');
             const title = document.getElementById('art-title').value;
             const desc = document.getElementById('art-desc').value;
-            if(!desc) return alert("Konten kosong!");
+            if(!desc) return alert("Isi konten!");
             btn.innerText = "MENYIMPAN..."; btn.disabled = true;
             try {
                 await addDoc(collection(db, activeTab), { title, desc, image: fotoBase64, updatedAt: serverTimestamp() });
@@ -234,17 +235,20 @@
             if(!d) return;
             document.getElementById('read-title').innerText = d.title;
             document.getElementById('read-date').innerText = formatTgl(d.updatedAt);
-            document.getElementById('read-desc').innerHTML = d.desc.split('\n').map(l => `<p class="mb-4 text-justify">${l}</p>`).join('');
+            document.getElementById('read-desc').innerHTML = d.desc.split('\n').map(l => `<p class="text-justify">${l}</p>`).join('');
             document.getElementById('read-img').src = d.image;
             document.getElementById('read-modal').style.display = 'flex';
-            document.getElementById('btn-share-trigger').onclick = () => {
-                const text = `*${d.title}*\n\n${d.desc.substring(0,100)}...\n\nBaca di Lentera Hidup.`;
-                if(navigator.share) navigator.share({ title: d.title, text, url: window.location.href });
-                else { navigator.clipboard.writeText(text); alert("Disalin!"); }
+            document.getElementById('btn-share-trigger').onclick = async () => {
+                const shareText = `*${d.title}*\n\n${d.desc.substring(0, 150)}...\n\nBaca di: ${window.location.href}`;
+                if(navigator.share) await navigator.share({ title: d.title, text: shareText, url: window.location.href });
+                else { navigator.clipboard.writeText(shareText); alert("Disalin!"); }
             };
         };
 
-        window.bukaModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.bukaModal = (id) => {
+            document.getElementById(id).style.display = 'flex';
+            document.getElementById(id).scrollTop = 0; // Mulai dari atas setiap kali buka
+        };
         window.tutupModal = (id) => document.getElementById(id).style.display = 'none';
         window.bukaAdmin = () => { if(prompt("Pass:") === "1") bukaModal('admin-modal'); };
 
