@@ -23,7 +23,7 @@
         .playfair { font-family: 'Playfair Display', serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 2rem; }
         .modal { position: fixed; inset: 0; background: #020617; z-index: 9999; display: none; flex-direction: column; overflow-y: auto; }
-        .art-card { position: relative; border-radius: 2rem; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .art-card { position: relative; border-radius: 2rem; overflow: hidden; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.05); cursor: pointer; margin-bottom: 2rem; }
         .art-card img { width: 100%; height: 320px; object-fit: cover; }
         .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(2,6,23,1) 0%, rgba(2,6,23,0.4) 50%, rgba(2,6,23,0) 100%); display: flex; flex-direction: column; justify-content: end; padding: 2rem; text-align: center; }
         .cross-container { position: relative; width: 60px; height: 120px; margin: 0 auto 3rem; display: flex; justify-content: center; }
@@ -50,7 +50,7 @@
         <h1 class="text-4xl font-extrabold mb-6 tracking-tight gradient-text">Firman Tuhan Menghidupkan.</h1>
         <p class="text-gray-400 text-base leading-relaxed mb-10 playfair italic opacity-80 max-w-md mx-auto">"Di tengah bisingnya dunia, biarlah Firman-Nya menjadi pelabuhan tenang bagi jiwamu."</p>
         <div class="flex flex-col gap-4">
-            <button onclick="document.getElementById('renungan-section').scrollIntoView()" class="bg-white text-black h-16 rounded-3xl font-black uppercase tracking-widest text-xs">Renungan Hari Ini</button>
+            <button onclick="document.getElementById('renungan-section').scrollIntoView({behavior:'smooth'})" class="bg-white text-black h-16 rounded-3xl font-black uppercase tracking-widest text-xs">Renungan Hari Ini</button>
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="bukaModal('quote-modal')" class="glass h-16 rounded-3xl font-bold text-[10px] flex items-center justify-center gap-2 uppercase tracking-wider"><i data-lucide="sparkles" class="text-blue-400" size="16"></i> Ayat Hari Ini</button>
                 <button onclick="bukaModal('bible-modal')" class="glass h-16 rounded-3xl font-bold text-[10px] flex items-center justify-center gap-2 uppercase tracking-wider"><i data-lucide="book-open" class="text-green-400" size="16"></i> Bacaan Setahun</button>
@@ -59,7 +59,8 @@
     </header>
 
     <main id="renungan-section" class="px-6 py-24 max-w-lg mx-auto w-full">
-        <div id="article-container" class="space-y-12"></div>
+        <div id="article-container">
+            </div>
     </main>
 
     <footer class="mt-auto relative border-t border-white/5 bg-slate-950 pt-32 pb-20 px-10 text-center overflow-hidden">
@@ -77,12 +78,9 @@
         <div class="p-6 flex justify-end">
             <button onclick="tutupModal('bible-modal')" class="w-12 h-12 glass rounded-full flex items-center justify-center"><i data-lucide="x"></i></button>
         </div>
-        <div class="animate__animated animate__fadeInUp px-6 pb-20 w-full">
+        <div class="px-6 pb-20 w-full">
             <h3 class="text-green-500 font-black uppercase text-[10px] tracking-[0.5em] mb-8 text-center">Alkitab Setahun</h3>
             <div id="b-text" class="text-[15px] text-white/90 leading-relaxed text-justify space-y-4"></div>
-            <button onclick="tutupModal('bible-modal')" class="mt-16 w-full py-5 glass rounded-3xl font-black text-[10px] uppercase tracking-widest text-gray-400 flex items-center justify-center gap-2">
-                <i data-lucide="chevron-down" size="14"></i> Selesai Membaca
-            </button>
         </div>
     </div>
 
@@ -96,7 +94,6 @@
             <div id="read-date" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 text-center"></div>
             <h2 id="read-title" class="text-2xl font-black mb-8 leading-tight text-center px-4"></h2>
             <div id="read-desc" class="text-gray-300 leading-relaxed text-[15px] space-y-6 pb-12 text-justify"></div>
-            <button onclick="tutupModal('read-modal')" class="w-full py-5 glass rounded-3xl font-black text-[10px] uppercase tracking-widest text-gray-500 flex items-center justify-center gap-2 mb-10"><i data-lucide="arrow-left" size="14"></i> Kembali ke Daftar</button>
         </div>
     </div>
 
@@ -106,7 +103,7 @@
 
     <div id="admin-modal" class="modal p-8">
         <div class="flex justify-between items-center mb-8">
-            <h2 class="text-sm font-black text-blue-500 uppercase tracking-widest">Panel Kontrol</h2>
+            <h2 class="text-sm font-black text-blue-500 uppercase tracking-widest">Admin Control</h2>
             <button onclick="tutupModal('admin-modal')"><i data-lucide="x"></i></button>
         </div>
         
@@ -122,16 +119,14 @@
                 <button onclick="resetForm()" class="font-bold underline">Batal</button>
             </div>
             
-            <div id="form-img-box" class="space-y-4">
-                <div class="grid grid-cols-1 gap-3">
-                    <div class="space-y-2">
-                        <label class="text-[9px] uppercase font-bold text-gray-500 ml-2">Pilih File Gambar</label>
-                        <input type="file" id="art-img-input" accept="image/*" onchange="prosesGambar(this)" class="w-full text-[10px] bg-white/5 p-3 rounded-xl">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[9px] uppercase font-bold text-gray-500 ml-2">ATAU Pakai Link URL Gambar</label>
-                        <input id="art-img-url" type="text" placeholder="https://site.com/gambar.jpg" class="w-full bg-white/5 p-4 rounded-xl outline-none text-xs border border-white/5 text-white">
-                    </div>
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <label class="text-[9px] uppercase font-bold text-gray-500 ml-2">Pilih File Gambar</label>
+                    <input type="file" id="art-img-input" accept="image/*" onchange="prosesGambar(this)" class="w-full text-[10px] bg-white/5 p-3 rounded-xl">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[9px] uppercase font-bold text-gray-500 ml-2">Atau URL Gambar</label>
+                    <input id="art-img-url" type="text" placeholder="https://..." class="w-full bg-white/5 p-4 rounded-xl outline-none text-xs border border-white/5 text-white">
                 </div>
             </div>
 
@@ -183,16 +178,27 @@
         ['renungan', 'ayat', 'bacaan'].forEach(setupSync);
 
         function updateView() {
+            // Render Halaman Depan
             const home = document.getElementById('article-container');
             const now = new Date();
             if (home) {
                 home.innerHTML = "";
                 store.renungan.forEach(item => {
-                    if (item.updatedAt.toDate() <= now) {
-                        home.innerHTML += `<div onclick="window.bukaBaca('${item.id}')" class="art-card animate__animated animate__fadeIn"><img src="${item.image}"><div class="card-overlay"><span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-2">${formatTgl(item.updatedAt)}</span><h3 class="text-xl font-extrabold">${item.title}</h3></div></div>`;
+                    const postDate = item.updatedAt.toDate();
+                    if (postDate <= now) {
+                        home.innerHTML += `
+                            <div onclick="window.bukaBaca('${item.id}')" class="art-card animate__animated animate__fadeIn">
+                                <img src="${item.image || 'https://via.placeholder.com/400x300?text=No+Image'}">
+                                <div class="card-overlay">
+                                    <span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-2">${formatTgl(item.updatedAt)}</span>
+                                    <h3 class="text-xl font-extrabold">${item.title}</h3>
+                                </div>
+                            </div>`;
                     }
                 });
             }
+
+            // Update Ayat & Bacaan
             if(store.ayat.length > 0) {
                 document.getElementById('q-text').innerText = `"${store.ayat[0].desc}"`;
                 document.getElementById('q-ref').innerText = store.ayat[0].title;
@@ -201,6 +207,7 @@
                 document.getElementById('b-text').innerHTML = store.bacaan[0].desc.split('\n').map(line => `<p>${line}</p>`).join('');
             }
             
+            // Update List Admin
             const list = document.getElementById('admin-list');
             if (list) {
                 list.innerHTML = "";
@@ -233,7 +240,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     fotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                    document.getElementById('art-img-url').value = ""; // Clear URL if file selected
+                    document.getElementById('art-img-url').value = "";
                 };
                 img.src = e.target.result;
             };
@@ -285,7 +292,6 @@
             
             if(!desc) return alert("Isi konten!");
             let finalDate = dateInput ? new Date(dateInput) : new Date();
-            // Prioritas: Jika URL diisi, pakai URL. Jika tidak, pakai file upload (fotoBase64)
             let finalImage = urlInput ? urlInput : fotoBase64;
             
             btn.innerText = "PROSES..."; btn.disabled = true;
@@ -310,29 +316,10 @@
             updateView();
         };
 
-        window.hapusData = async (id) => { if(confirm("Hapus selamanya?")) await deleteDoc(doc(db, activeTab, id)); };
+        window.hapusData = async (id) => { if(confirm("Hapus?")) await deleteDoc(doc(db, activeTab, id)); };
         
         window.bukaBaca = (id) => {
             const d = store.renungan.find(x => x.id === id);
             if(!d) return;
             document.getElementById('read-title').innerText = d.title;
-            document.getElementById('read-date').innerText = formatTgl(d.updatedAt);
-            document.getElementById('read-desc').innerHTML = d.desc.split('\n').map(l => `<p class="mb-4 text-justify">${l}</p>`).join('');
-            document.getElementById('read-img').src = d.image;
-            document.getElementById('read-modal').style.display = 'flex';
-            document.getElementById('btn-share-global').onclick = async () => {
-                const text = `*${d.title}*\n\n${d.desc.substring(0, 200)}...\n\nBaca di: ${window.location.href}`;
-                if(navigator.share) await navigator.share({ title: d.title, text: text, url: window.location.href });
-                else { await navigator.clipboard.writeText(text); alert("Teks disalin!"); }
-            };
-        };
-
-        window.bukaModal = (id) => { const el = document.getElementById(id); if (el) { el.style.display = 'flex'; el.scrollTop = 0; } };
-        window.tutupModal = (id) => { const el = document.getElementById(id); if (el) el.style.display = 'none'; };
-        window.bukaAdmin = () => { if(prompt("Pass:") === "1") bukaModal('admin-modal'); };
-
-        lucide.createIcons();
-        switchTab('renungan');
-    </script>
-</body>
-</html>
+   
