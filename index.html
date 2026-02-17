@@ -68,6 +68,11 @@
     </header>
 
     <main id="renungan-section" class="px-6 py-24 max-w-lg mx-auto w-full">
+        <div class="flex items-center gap-4 mb-12">
+            <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-blue-600/30"></div>
+            <h2 class="text-sm font-black uppercase tracking-[0.4em] text-blue-500">List Renungan</h2>
+            <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-blue-600/30"></div>
+        </div>
         <div id="article-container" class="space-y-12"></div>
     </main>
 
@@ -86,10 +91,9 @@
         <div class="p-6 flex justify-end">
             <button onclick="tutupModal('bible-modal')" class="w-12 h-12 glass rounded-full flex items-center justify-center"><i data-lucide="x"></i></button>
         </div>
-        <div class="animate__animated animate__fadeInUp px-6 pb-10 w-full">
+        <div class="animate__animated animate__fadeInUp px-6 pb-20 w-full">
             <h3 class="text-green-500 font-black uppercase text-[10px] tracking-[0.5em] mb-8 text-center">Alkitab Setahun</h3>
             <div id="b-text" class="text-[15px] text-white/90 leading-relaxed text-justify space-y-4"></div>
-            
             <button onclick="tutupModal('bible-modal')" class="mt-16 w-full py-5 glass rounded-3xl font-black text-[10px] uppercase tracking-widest text-gray-400 flex items-center justify-center gap-2">
                 <i data-lucide="chevron-down" size="14"></i> Selesai Membaca
             </button>
@@ -102,8 +106,7 @@
         <div class="p-6 w-full mx-auto -mt-12 relative bg-slate-950 rounded-t-[3rem] shadow-2xl">
             <div id="read-date" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2 text-center"></div>
             <h2 id="read-title" class="text-2xl font-black mb-8 leading-tight text-center px-4"></h2>
-            <div id="read-desc" class="text-gray-300 leading-relaxed text-[15px] space-y-6 pb-20 text-justify"></div>
-            
+            <div id="read-desc" class="text-gray-300 leading-relaxed text-[15px] space-y-6 pb-12 text-justify"></div>
             <button onclick="tutupModal('read-modal')" class="w-full py-5 glass rounded-3xl font-black text-[10px] uppercase tracking-widest text-gray-500 flex items-center justify-center gap-2 mb-10">
                 <i data-lucide="arrow-left" size="14"></i> Kembali ke Daftar
             </button>
@@ -164,11 +167,13 @@
 
         function updateView() {
             const home = document.getElementById('article-container');
-            home.innerHTML = "";
-            store.renungan.forEach(item => {
-                const tgl = formatTgl(item.updatedAt);
-                home.innerHTML += `<div onclick="window.bukaBaca('${item.id}')" class="art-card group animate__animated animate__fadeIn"><img src="${item.image}"><div class="card-overlay"><span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-2">${tgl}</span><h3 class="text-xl font-extrabold">${item.title}</h3></div></div>`;
-            });
+            if (home) {
+                home.innerHTML = "";
+                store.renungan.forEach(item => {
+                    const tgl = formatTgl(item.updatedAt);
+                    home.innerHTML += `<div onclick="window.bukaBaca('${item.id}')" class="art-card group animate__animated animate__fadeIn"><img src="${item.image}"><div class="card-overlay"><span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em] mb-2">${tgl}</span><h3 class="text-xl font-extrabold">${item.title}</h3></div></div>`;
+                });
+            }
 
             if(store.ayat.length > 0) {
                 document.getElementById('q-text').innerText = `"${store.ayat[0].desc}"`;
@@ -179,10 +184,12 @@
             }
 
             const list = document.getElementById('admin-list');
-            list.innerHTML = "";
-            store[activeTab].forEach(item => {
-                list.innerHTML += `<div class="p-5 glass flex justify-between items-center text-[10px] font-bold uppercase"><span>${item.title || item.desc.substring(0,20)}</span><button onclick="hapusData('${item.id}')" class="text-red-500">Hapus</button></div>`;
-            });
+            if (list) {
+                list.innerHTML = "";
+                store[activeTab].forEach(item => {
+                    list.innerHTML += `<div class="p-5 glass flex justify-between items-center text-[10px] font-bold uppercase"><span>${item.title || item.desc.substring(0,20)}</span><button onclick="hapusData('${item.id}')" class="text-red-500">Hapus</button></div>`;
+                });
+            }
             lucide.createIcons();
         }
 
@@ -224,7 +231,8 @@
             activeTab = tab;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`tab-${tab}`).classList.add('active');
-            document.getElementById('form-img-box').style.display = (tab === 'renungan') ? 'block' : 'none';
+            const imgBox = document.getElementById('form-img-box');
+            if (imgBox) imgBox.style.display = (tab === 'renungan') ? 'block' : 'none';
             updateView();
         };
 
@@ -235,21 +243,26 @@
             if(!d) return;
             document.getElementById('read-title').innerText = d.title;
             document.getElementById('read-date').innerText = formatTgl(d.updatedAt);
-            document.getElementById('read-desc').innerHTML = d.desc.split('\n').map(l => `<p class="text-justify">${l}</p>`).join('');
+            document.getElementById('read-desc').innerHTML = d.desc.split('\n').map(l => `<p class="mb-4 text-justify">${l}</p>`).join('');
             document.getElementById('read-img').src = d.image;
             document.getElementById('read-modal').style.display = 'flex';
+            document.getElementById('read-modal').scrollTop = 0;
+
             document.getElementById('btn-share-trigger').onclick = async () => {
                 const shareText = `*${d.title}*\n\n${d.desc.substring(0, 150)}...\n\nBaca di: ${window.location.href}`;
                 if(navigator.share) await navigator.share({ title: d.title, text: shareText, url: window.location.href });
-                else { navigator.clipboard.writeText(shareText); alert("Disalin!"); }
+                else { navigator.clipboard.writeText(shareText); alert("Link disalin!"); }
             };
         };
 
         window.bukaModal = (id) => {
-            document.getElementById(id).style.display = 'flex';
-            document.getElementById(id).scrollTop = 0; // Mulai dari atas setiap kali buka
+            const el = document.getElementById(id);
+            if (el) { el.style.display = 'flex'; el.scrollTop = 0; }
         };
-        window.tutupModal = (id) => document.getElementById(id).style.display = 'none';
+        window.tutupModal = (id) => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        };
         window.bukaAdmin = () => { if(prompt("Pass:") === "1") bukaModal('admin-modal'); };
 
         lucide.createIcons();
