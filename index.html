@@ -19,7 +19,7 @@
         
         .modal { position: fixed; inset: 0; background: #020617; z-index: 9999; display: none; flex-direction: column; overflow-y: auto; }
         
-        /* CARD RENUNGAN PREMIUM - JUDUL DI TENGAH */
+        /* CARD RENUNGAN PREMIUM */
         .art-card { 
             position: relative; 
             border-radius: 2.5rem; 
@@ -43,6 +43,10 @@
             text-align: center; 
         }
 
+        /* ANIMASI QUIZ */
+        .correct-anim { animation: bounceIn 0.6s; background: #10b981 !important; border-color: #34d399 !important; box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
+        .wrong-anim { animation: shakeX 0.5s; background: #ef4444 !important; border-color: #f87171 !important; box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); }
+
         .tab-container { display: flex; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 1.2rem; gap: 4px; }
         .tab-btn { flex: 1; padding: 10px; border-radius: 1rem; font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
         .tab-btn.active { background: #3b82f6; color: white; }
@@ -50,8 +54,6 @@
         .cross-container { position: relative; width: 40px; height: 80px; margin: 0 auto 2rem; display: flex; justify-content: center; }
         .cross-vertical { position: absolute; width: 4px; height: 100%; background: #3b82f6; border-radius: 2px; box-shadow: 0 0 15px #3b82f6; }
         .cross-horizontal { position: absolute; width: 35px; height: 4px; background: #3b82f6; top: 25%; border-radius: 2px; box-shadow: 0 0 15px #3b82f6; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
@@ -74,7 +76,6 @@
                 <button onclick="bukaModal('bible-modal')" class="glass h-16 rounded-3xl font-bold text-[10px] uppercase flex items-center justify-center gap-2"><i data-lucide="book-open" class="text-green-400"></i> Bacaan Setahun</button>
             </div>
             <button onclick="bukaModal('quiz-modal')" class="w-full glass h-16 rounded-3xl font-bold text-[10px] uppercase text-yellow-500 flex items-center justify-center gap-2"><i data-lucide="help-circle"></i> Kuis Alkitab</button>
-            
             <button onclick="document.getElementById('renungan-section').scrollIntoView({behavior:'smooth'})" class="w-full bg-white text-black py-5 rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-2xl active:scale-95 transition-all mt-2">Baca Renungan Hari Ini</button>
         </div>
     </header>
@@ -107,12 +108,25 @@
         <div class="px-6 py-10 w-full relative bg-[#020617] rounded-t-[3.5rem] -mt-12 min-h-screen">
             <p id="read-date-detail" class="text-blue-500 text-[9px] font-black uppercase tracking-widest text-center mb-4"></p>
             <h2 id="read-title" class="text-2xl font-black mb-10 text-center leading-tight"></h2>
-            
             <div id="read-desc" class="text-gray-300 leading-[1.8] text-base text-justify space-y-6 px-1"></div>
-            
             <div class="mt-16 pb-24 space-y-3">
                 <button onclick="shareNow()" class="w-full bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase flex justify-center items-center gap-2"><i data-lucide="share-2" size="14"></i> Bagikan Firman</button>
                 <button onclick="tutupModal('read-modal')" class="w-full glass py-4 rounded-2xl font-black text-[10px] text-gray-500 uppercase">Selesai Membaca</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-modal" class="modal items-center justify-center p-8 text-center">
+        <div class="w-full max-w-sm">
+            <div class="w-16 h-16 bg-blue-600/10 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <i data-lucide="help-circle" class="text-blue-500" size="32"></i>
+            </div>
+            <h2 id="quiz-q" class="text-2xl font-bold mb-10 leading-tight"></h2>
+            <div id="quiz-options" class="space-y-3"></div>
+            <div id="quiz-fb" class="mt-8 p-6 rounded-[2.5rem] hidden border-2"></div>
+            <div class="mt-12 flex flex-col gap-4">
+                <button onclick="startQuiz()" class="text-blue-500 text-[10px] font-black uppercase tracking-widest">Soal Lainnya</button>
+                <button onclick="tutupModal('quiz-modal')" class="text-gray-600 text-[10px] font-bold uppercase">Tutup Kuis</button>
             </div>
         </div>
     </div>
@@ -130,17 +144,14 @@
         <div class="glass p-5 space-y-4 mb-6">
             <div id="img-prev-cont" class="hidden"><img id="img-prev" class="w-full h-32 object-cover rounded-xl mb-2"></div>
             <input type="file" id="art-file" accept="image/*" onchange="previewImg(this)" class="w-full text-[10px]">
-            <input id="art-title" type="text" placeholder="Judul" class="w-full bg-white/5 p-4 rounded-xl text-sm border border-white/5">
-            <textarea id="art-desc" placeholder="Isi..." class="w-full bg-white/5 p-4 rounded-xl h-32 text-sm border border-white/5"></textarea>
-            <input id="art-schedule" type="datetime-local" class="w-full bg-white/5 p-4 rounded-xl text-sm text-gray-400">
+            <input id="art-title" type="text" placeholder="Judul" class="w-full bg-white/5 p-4 rounded-xl text-sm border border-white/5 outline-none">
+            <textarea id="art-desc" placeholder="Isi..." class="w-full bg-white/5 p-4 rounded-xl h-32 text-sm border border-white/5 outline-none"></textarea>
+            <input id="art-schedule" type="datetime-local" class="w-full bg-white/5 p-4 rounded-xl text-sm text-gray-400 outline-none">
             <button id="submit-btn" onclick="saveData()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-[10px] uppercase">Publikasikan</button>
         </div>
         <div id="admin-list" class="space-y-3 pb-20"></div>
     </div>
 
-    <div id="quiz-modal" class="modal items-center justify-center p-8 text-center">
-        <div class="w-full max-w-sm"><h2 id="quiz-q" class="text-2xl font-bold mb-10"></h2><div id="quiz-options" class="space-y-3"></div><div id="quiz-fb" class="mt-8 p-6 rounded-3xl hidden border"></div><button onclick="tutupModal('quiz-modal')" class="mt-12 text-gray-500 text-[10px] font-bold uppercase">Tutup</button></div>
-    </div>
     <div id="quote-modal" class="modal items-center justify-center p-12 text-center"><div class="animate__animated animate__zoomIn"><i data-lucide="quote" class="text-blue-500 mx-auto mb-8"></i><h2 id="q-text" class="text-xl playfair italic mb-6"></h2><p id="q-ref" class="text-blue-400 font-black text-[10px] tracking-widest uppercase"></p><button onclick="tutupModal('quote-modal')" class="mt-12 border border-white/10 px-8 py-3 rounded-full text-[8px] uppercase">Tutup</button></div></div>
     <div id="bible-modal" class="modal"><div class="p-6 flex justify-end"><button onclick="tutupModal('bible-modal')"><i data-lucide="x"></i></button></div><div class="px-8 pb-20"><div id="b-text" class="text-gray-300 leading-relaxed text-justify space-y-6"></div><button onclick="tutupModal('bible-modal')" class="w-full bg-green-600 py-4 rounded-2xl font-black mt-10 text-[10px] uppercase">Selesai</button></div></div>
 
@@ -152,13 +163,12 @@
         const app = initializeApp(firebaseConfig); const db = getFirestore(app);
         let store = { renungan: [], ayat: [], bacaan: [] }, currentTab = "renungan", editId = null, base64Img = "";
 
-        // BANK SOAL (RANDOMIZED)
         const quizBank = [
-            { q: "Siapa Raja yang meminta hikmat?", a: "Salomo", b: "Daud", c: "Saul" },
-            { q: "Kitab pertama Alkitab?", a: "Kejadian", b: "Keluaran", c: "Imamat" },
-            { q: "Siapa pembasmi Goliat?", a: "Daud", b: "Simson", c: "Musa" },
-            { q: "Dimana Yesus lahir?", a: "Betlehem", b: "Nazaret", c: "Yerusalem" },
-            { q: "Siapa orang paling sabar?", a: "Ayub", b: "Yusuf", c: "Abraham" }
+            { q: "Siapa Raja yang meminta hikmat kepada Allah?", a: "Salomo", b: "Daud", c: "Saul" },
+            { q: "Kitab apakah yang terletak paling awal di Alkitab?", a: "Kejadian", b: "Keluaran", c: "Matius" },
+            { q: "Siapakah pemuda yang mengalahkan raksasa Goliat?", a: "Daud", b: "Simson", c: "Gibeon" },
+            { q: "Di kota manakah Tuhan Yesus dilahirkan?", a: "Betlehem", b: "Nazaret", c: "Yerikho" },
+            { q: "Berapa jumlah murid utama Tuhan Yesus?", a: "12", b: "10", c: "7" }
         ];
 
         ['renungan', 'ayat', 'bacaan'].forEach(cat => {
@@ -171,7 +181,6 @@
         function renderUI() {
             const sekarang = new Date().getTime();
             const filter = (arr) => arr.filter(i => !i.schedule || new Date(i.schedule).getTime() <= sekarang);
-
             const container = document.getElementById('article-container');
             const renTayang = filter(store.renungan);
             if(container) container.innerHTML = renTayang.map(i => `
@@ -182,13 +191,10 @@
                         <h3 class="text-xl font-extrabold text-white leading-tight">${i.title}</h3>
                     </div>
                 </div>`).join('');
-
             const ay = filter(store.ayat)[0];
             if(ay) { document.getElementById('q-text').innerText = ay.desc; document.getElementById('q-ref').innerText = ay.title; }
-            
             const bac = filter(store.bacaan)[0];
             if(bac) { document.getElementById('b-text').innerHTML = `<h3 class="text-blue-500 font-black text-center mb-6 uppercase tracking-widest">${bac.title}</h3>` + bac.desc.split('\n').map(p => `<p>${p}</p>`).join(''); }
-
             const list = document.getElementById('admin-list');
             if(list) list.innerHTML = store[currentTab].map(i => `
                 <div class="glass p-4 flex justify-between items-center"><div class="truncate"><span class="block text-[10px] font-bold text-white">${i.title || 'Data'}</span><span class="text-[7px] text-gray-500 uppercase">${i.schedule || 'Instan'}</span></div>
@@ -207,18 +213,37 @@
             }
         };
 
+        // FITUR SHARE DENGAN ISI TEXT
+        window.shareNow = () => {
+            const title = document.getElementById('read-title').innerText;
+            const desc = document.getElementById('read-desc').innerText.substring(0, 150) + "...";
+            if(navigator.share) {
+                navigator.share({ title: title, text: `*${title}*\n\n${desc}\n\nBaca selengkapnya di Lentera Hidup:\n`, url: window.location.href });
+            }
+        };
+
+        // KUIS DENGAN NASIHAT & PUITIS
         window.startQuiz = () => {
             const q = quizBank[Math.floor(Math.random() * quizBank.length)];
             document.getElementById('quiz-q').innerText = q.q;
             document.getElementById('quiz-fb').classList.add('hidden');
             const opts = [q.a, q.b, q.c].sort(() => Math.random() - 0.5);
-            document.getElementById('quiz-options').innerHTML = opts.map(o => `<button onclick="checkAns(this,'${o}','${q.a}')" class="w-full p-4 glass rounded-2xl font-bold text-sm text-left">${o}</button>`).join('');
+            document.getElementById('quiz-options').innerHTML = opts.map(o => `<button onclick="checkAns(this,'${o}','${q.a}')" class="w-full p-5 glass rounded-[1.5rem] font-bold text-sm text-left transition-all active:scale-95">${o}</button>`).join('');
         };
 
         window.checkAns = (btn, pil, benar) => {
             const fb = document.getElementById('quiz-fb'); fb.classList.remove('hidden');
-            if(pil === benar) { btn.style.background = "#10b981"; fb.innerText = "Benar!"; fb.className = "mt-8 p-6 rounded-3xl bg-green-500/10 text-green-400"; }
-            else { btn.style.background = "#ef4444"; fb.innerText = "Jawaban: " + benar; fb.className = "mt-8 p-6 rounded-3xl bg-red-500/10 text-red-400"; }
+            document.querySelectorAll('#quiz-options button').forEach(b => b.disabled = true);
+            
+            if(pil === benar) { 
+                btn.classList.add('correct-anim', 'text-white'); 
+                fb.innerHTML = `<p class="playfair italic text-green-400 text-base mb-2">"Bagaikan rusa merindukan air, jiwamu telah menemukan kebenaran firman-Nya."</p><p class="text-[9px] font-black uppercase text-green-600 tracking-widest">Jawaban Benar</p>`;
+                fb.className = "mt-8 p-6 rounded-[2.5rem] bg-green-500/10 border-green-500/30 animate__animated animate__fadeInUp";
+            } else { 
+                btn.classList.add('wrong-anim', 'text-white'); 
+                fb.innerHTML = `<p class="text-red-400 font-bold text-sm mb-3">Mari tekun membaca firman Tuhan agar hati senantiasa penuh hikmat.</p><p class="text-[9px] font-black uppercase text-gray-500 tracking-widest">Benarnya: ${benar}</p>`;
+                fb.className = "mt-8 p-6 rounded-[2.5rem] bg-red-500/10 border-red-500/30 animate__animated animate__shakeX";
+            }
         };
 
         window.saveData = async () => {
@@ -226,7 +251,6 @@
             if(!payload.desc) return;
             try { if(editId) await updateDoc(doc(db, currentTab, editId), payload); else await addDoc(collection(db, currentTab), payload); resetForm(); } catch(e) { alert(e); }
         };
-
         window.previewImg = (input) => { const reader = new FileReader(); reader.onload = (e) => { base64Img = e.target.result; document.getElementById('img-prev').src = base64Img; document.getElementById('img-prev-cont').classList.remove('hidden'); }; if(input.files[0]) reader.readAsDataURL(input.files[0]); };
         window.prepareEdit = (id) => { const d = store[currentTab].find(x => x.id === id); if(d) { editId = id; document.getElementById('art-title').value = d.title; document.getElementById('art-desc').value = d.desc; document.getElementById('art-schedule').value = d.schedule || ""; base64Img = d.image || ""; document.getElementById('submit-btn').innerText = "Simpan Perubahan"; } };
         window.deleteItem = async (id) => { if(confirm("Hapus?")) await deleteDoc(doc(db, currentTab, id)); };
@@ -235,7 +259,6 @@
         window.tutupModal = (id) => document.getElementById(id).style.display = 'none';
         window.bukaAdmin = () => { if(prompt("Pass:") === "1") bukaModal('admin-modal'); };
         function resetForm() { editId = null; base64Img = ""; document.querySelectorAll('input, textarea').forEach(i => i.value = ""); document.getElementById('img-prev-cont').classList.add('hidden'); document.getElementById('submit-btn').innerText = "Publikasikan"; }
-        window.shareNow = () => { if(navigator.share) navigator.share({ title: 'Lentera Hidup', url: window.location.href }); };
         lucide.createIcons();
     </script>
 </body>
