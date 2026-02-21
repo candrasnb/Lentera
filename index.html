@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Lentera Hidup - Renungan & Kuis Alkitab</title>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6563632943896574" crossorigin="anonymous"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -16,7 +19,7 @@
         
         .modal { position: fixed; inset: 0; background: #020617; z-index: 9999; display: none; flex-direction: column; overflow-y: auto; }
         
-        /* CARD RENUNGAN PREMIUM */
+        /* CARD RENUNGAN PREMIUM - JUDUL DI TENGAH */
         .art-card { 
             position: relative; 
             border-radius: 2.5rem; 
@@ -40,12 +43,10 @@
             text-align: center; 
         }
 
-        /* TAB ADMIN */
         .tab-container { display: flex; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 1.2rem; gap: 4px; }
         .tab-btn { flex: 1; padding: 10px; border-radius: 1rem; font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
         .tab-btn.active { background: #3b82f6; color: white; }
 
-        /* FOOTER CROSS */
         .cross-container { position: relative; width: 40px; height: 80px; margin: 0 auto 2rem; display: flex; justify-content: center; }
         .cross-vertical { position: absolute; width: 4px; height: 100%; background: #3b82f6; border-radius: 2px; box-shadow: 0 0 15px #3b82f6; }
         .cross-horizontal { position: absolute; width: 35px; height: 4px; background: #3b82f6; top: 25%; border-radius: 2px; box-shadow: 0 0 15px #3b82f6; }
@@ -90,7 +91,7 @@
     <footer class="relative border-t border-white/5 bg-slate-950 pt-24 pb-16 px-8 text-center">
         <div class="cross-container"><div class="cross-vertical"></div><div class="cross-horizontal"></div></div>
         <div class="max-w-md mx-auto space-y-6">
-            <h3 class="playfair text-xl text-white/70 italic leading-relaxed px-4">"Sebab itu jadilah penurut-penurut Allah, seperti anak-anak yang kekasih dan hiduplah di dalam kasih."</h3>
+            <h3 class="playfair text-xl text-white/70 italic leading-relaxed px-4">"Sebab itu jadilah penurut-penurut Allah, seperti anak-anak yang kekasih dan hiduplah di dalam kasih, sebagaimana Kristus juga telah mengasihi kamu."</h3>
             <div class="w-12 h-[1px] bg-blue-600 mx-auto"></div>
             <p class="text-gray-500 text-[9px] tracking-[0.4em] uppercase font-black">Soli Deo Gloria</p>
             <p class="text-gray-700 text-[8px] uppercase tracking-widest mt-4">Lentera Hidup Digital Ministry &copy; 2026</p>
@@ -129,9 +130,9 @@
         <div class="glass p-5 space-y-4 mb-6">
             <div id="img-prev-cont" class="hidden"><img id="img-prev" class="w-full h-32 object-cover rounded-xl mb-2"></div>
             <input type="file" id="art-file" accept="image/*" onchange="previewImg(this)" class="w-full text-[10px]">
-            <input id="art-title" type="text" placeholder="Judul / Ref" class="w-full bg-white/5 p-4 rounded-xl text-sm outline-none border border-white/5">
-            <textarea id="art-desc" placeholder="Isi..." class="w-full bg-white/5 p-4 rounded-xl h-32 text-sm outline-none border border-white/5"></textarea>
-            <input id="art-schedule" type="datetime-local" class="w-full bg-white/5 p-4 rounded-xl text-sm text-gray-400 outline-none border border-white/5">
+            <input id="art-title" type="text" placeholder="Judul" class="w-full bg-white/5 p-4 rounded-xl text-sm border border-white/5">
+            <textarea id="art-desc" placeholder="Isi..." class="w-full bg-white/5 p-4 rounded-xl h-32 text-sm border border-white/5"></textarea>
+            <input id="art-schedule" type="datetime-local" class="w-full bg-white/5 p-4 rounded-xl text-sm text-gray-400">
             <button id="submit-btn" onclick="saveData()" class="w-full bg-blue-600 py-4 rounded-xl font-black text-[10px] uppercase">Publikasikan</button>
         </div>
         <div id="admin-list" class="space-y-3 pb-20"></div>
@@ -151,10 +152,13 @@
         const app = initializeApp(firebaseConfig); const db = getFirestore(app);
         let store = { renungan: [], ayat: [], bacaan: [] }, currentTab = "renungan", editId = null, base64Img = "";
 
+        // BANK SOAL (RANDOMIZED)
         const quizBank = [
-            { q: "Siapa raja Israel yang paling bijaksana?", a: "Salomo", b: "Daud", c: "Saul" },
-            { q: "Apa kitab pertama di Alkitab?", a: "Kejadian", b: "Keluaran", c: "Matius" },
-            { q: "Siapa yang membunuh Goliat?", a: "Daud", b: "Simson", c: "Musa" }
+            { q: "Siapa Raja yang meminta hikmat?", a: "Salomo", b: "Daud", c: "Saul" },
+            { q: "Kitab pertama Alkitab?", a: "Kejadian", b: "Keluaran", c: "Imamat" },
+            { q: "Siapa pembasmi Goliat?", a: "Daud", b: "Simson", c: "Musa" },
+            { q: "Dimana Yesus lahir?", a: "Betlehem", b: "Nazaret", c: "Yerusalem" },
+            { q: "Siapa orang paling sabar?", a: "Ayub", b: "Yusuf", c: "Abraham" }
         ];
 
         ['renungan', 'ayat', 'bacaan'].forEach(cat => {
@@ -213,8 +217,8 @@
 
         window.checkAns = (btn, pil, benar) => {
             const fb = document.getElementById('quiz-fb'); fb.classList.remove('hidden');
-            if(pil === benar) { btn.style.background = "#10b981"; fb.innerText = "Luar Biasa! Benar. Kamu adalah hamba-Nya yang suka membaca Firman Tuhan dan menyimpan dalam hati"; fb.className = "mt-8 p-6 rounded-3xl bg-green-500/10 text-green-400 border-green-500/20"; }
-            else { btn.style.background = "#ef4444"; fb.innerText = "Kurang Tepat, mari lebih giat membaca Firman Tuhan. Jawabannya: " + benar; fb.className = "mt-8 p-6 rounded-3xl bg-red-500/10 text-red-400 border-red-500/20"; }
+            if(pil === benar) { btn.style.background = "#10b981"; fb.innerText = "Benar!"; fb.className = "mt-8 p-6 rounded-3xl bg-green-500/10 text-green-400"; }
+            else { btn.style.background = "#ef4444"; fb.innerText = "Jawaban: " + benar; fb.className = "mt-8 p-6 rounded-3xl bg-red-500/10 text-red-400"; }
         };
 
         window.saveData = async () => {
